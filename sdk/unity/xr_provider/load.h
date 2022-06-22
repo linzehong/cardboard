@@ -19,6 +19,13 @@
 #include "IUnityInterface.h"
 #include "UnitySubsystemTypes.h"
 
+/// 插件名称，在RegisterLifecycleProvider()时使用，注意必须与UnitySubsystemManifest.json中"name"字段一致
+#define PLUGIN_NAME "GXRSDK XR Plugin"
+/// 显示模块名称，在RegisterLifecycleProvider()时使用，注意必须与UnitySussystemManifest.json中"displays"."id"字段一致
+#define DISPLAY_SUBSYSTEM_ID "GXRDisplay"
+/// 输入模块名称，在RegisterLifecycleProvider()时使用，注意必须与UnitySussystemManifest.json中"inputs"."id"字段一致
+#define INPUT_SUBSYSTEM_ID "GXRInput"
+
 /// @brief Loads a UnityLifecycleProvider for the display provider.
 ///
 /// @details Gets the trace and display interfaces from @p xr_interfaces and

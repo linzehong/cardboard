@@ -29,43 +29,6 @@
 
 #include "include/cardboard.h"
 
-// The following block makes log macros available for Android and iOS.
-#if defined(__ANDROID__)
-#include <android/log.h>
-#define LOG_TAG "CardboardXRUnity"
-#define LOGW(fmt, ...)                                                       \
-  __android_log_print(ANDROID_LOG_WARN, LOG_TAG, "[%s : %d] " fmt, __FILE__, \
-                      __LINE__, ##__VA_ARGS__)
-#define LOGD(fmt, ...)                                                        \
-  __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, "[%s : %d] " fmt, __FILE__, \
-                      __LINE__, ##__VA_ARGS__)
-#define LOGE(fmt, ...)                                                        \
-  __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, "[%s : %d] " fmt, __FILE__, \
-                      __LINE__, ##__VA_ARGS__)
-#define LOGF(fmt, ...)                                                        \
-  __android_log_print(ANDROID_LOG_FATAL, LOG_TAG, "[%s : %d] " fmt, __FILE__, \
-                      __LINE__, ##__VA_ARGS__)
-#elif defined(__APPLE__)
-#include <CoreFoundation/CFString.h>
-#include <CoreFoundation/CoreFoundation.h>
-extern "C" {
-void NSLog(CFStringRef format, ...);
-}
-#define LOGW(fmt, ...) \
-  NSLog(CFSTR("[%s : %d] " fmt), __FILE__, __LINE__, ##__VA_ARGS__)
-#define LOGD(fmt, ...) \
-  NSLog(CFSTR("[%s : %d] " fmt), __FILE__, __LINE__, ##__VA_ARGS__)
-#define LOGE(fmt, ...) \
-  NSLog(CFSTR("[%s : %d] " fmt), __FILE__, __LINE__, ##__VA_ARGS__)
-#define LOGF(fmt, ...) \
-  NSLog(CFSTR("[%s : %d] " fmt), __FILE__, __LINE__, ##__VA_ARGS__)
-#elif
-#define LOGW(...)
-#define LOGD(...)
-#define LOGE(...)
-#define LOGF(...)
-#endif
-
 namespace cardboard::unity {
 
 std::atomic<CardboardDisplayApi::ScreenParams>
@@ -77,12 +40,14 @@ std::mutex CardboardDisplayApi::widget_mutex_;
 
 std::atomic<bool> CardboardDisplayApi::device_params_changed_(true);
 
-std::atomic<CardboardGraphicsApi> CardboardDisplayApi::selected_graphics_api_(
-    kNone);
+std::atomic<CardboardGraphicsApi> CardboardDisplayApi::selected_graphics_api_(kNone);
 
 IUnityInterfaces* CardboardDisplayApi::xr_interfaces_{nullptr};
 
 CardboardDisplayApi::CardboardDisplayApi() {
+  // 目前只支持OpenGLEs3，直接设置
+  selected_graphics_api_ = kOpenGlEs3;
+
   switch (selected_graphics_api_) {
     case CardboardGraphicsApi::kOpenGlEs2:
       renderer_ = MakeOpenGlEs2Renderer();
@@ -340,62 +305,3 @@ void CardboardDisplayApi::RenderingResourcesTeardown() {
 }
 
 }  // namespace cardboard::unity
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-void CardboardUnity_setScreenParams(int screen_width, int screen_height,
-                                    int viewport_x, int viewport_y,
-                                    int viewport_width, int viewport_height) {
-  cardboard::unity::CardboardDisplayApi::SetUnityScreenParams(
-      screen_width, screen_height, viewport_x, viewport_y, viewport_width,
-      viewport_height);
-}
-
-void CardboardUnity_setDeviceParametersChanged() {
-  cardboard::unity::CardboardDisplayApi::SetDeviceParametersChanged();
-}
-
-void CardboardUnity_setWidgetCount(int count) {
-  cardboard::unity::CardboardDisplayApi::SetWidgetCount(count);
-}
-
-void CardboardUnity_setWidgetParams(int i, void* texture, int x, int y,
-                                    int width, int height) {
-  cardboard::unity::Renderer::WidgetParams params;
-
-  params.texture = reinterpret_cast<intptr_t>(texture);
-  params.x = x;
-  params.y = y;
-  params.width = width;
-  params.height = height;
-  cardboard::unity::CardboardDisplayApi::SetWidgetParams(i, params);
-}
-
-void CardboardUnity_setGraphicsApi(CardboardGraphicsApi graphics_api) {
-  switch (graphics_api) {
-    case CardboardGraphicsApi::kOpenGlEs2:
-      LOGD("Configured OpenGL ES2.0 as Graphics API.");
-      cardboard::unity::CardboardDisplayApi::SetGraphicsApi(graphics_api);
-      break;
-    case CardboardGraphicsApi::kOpenGlEs3:
-      LOGD("Configured OpenGL ES3.0 as Graphics API.");
-      cardboard::unity::CardboardDisplayApi::SetGraphicsApi(graphics_api);
-      break;
-#if defined(__APPLE__)
-    case CardboardGraphicsApi::kMetal:
-      LOGD("Configured Metal as Graphics API.");
-      cardboard::unity::CardboardDisplayApi::SetGraphicsApi(graphics_api);
-      break;
-#endif
-    default:
-      LOGE(
-          "Misconfigured Graphics API. Neither OpenGL ES 2.0 nor OpenGL ES 3.0 "
-          "nor Metal was selected.");
-  }
-}
-
-#ifdef __cplusplus
-}
-#endif

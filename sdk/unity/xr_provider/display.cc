@@ -131,6 +131,7 @@ class CardboardDisplayProvider {
   }
 
   UnitySubsystemErrorCode GfxThread_SubmitCurrentFrame() {
+    CARDBOARD_DISPLAY_XR_TRACE_LOG(trace_, "GfxThread_PopulateNextFrameDesc");
     if (!is_initialized_) {
       CARDBOARD_DISPLAY_XR_TRACE_LOG(
           trace_, "Skip the rendering because Cardboard SDK is uninitialized.");
@@ -144,6 +145,7 @@ class CardboardDisplayProvider {
   UnitySubsystemErrorCode GfxThread_PopulateNextFrameDesc(
       const UnityXRFrameSetupHints* frame_hints,
       UnityXRNextFrameDesc* next_frame) {
+    CARDBOARD_DISPLAY_XR_TRACE_LOG(trace_, "GfxThread_PopulateNextFrameDesc");
     // Allocate new color texture descriptors if needed and update device
     // parameters in Cardboard SDK.
     if ((frame_hints->changedFlags &
@@ -161,6 +163,7 @@ class CardboardDisplayProvider {
       }
       tex_map_.clear();
 
+      cardboard::unity::CardboardDisplayApi::GetScreenParams(&width_, &height_);
       cardboard::unity::CardboardDisplayApi::GetScreenParams(&width_, &height_);
       cardboard_display_api_->UpdateDeviceParams();
       is_initialized_ = true;
@@ -365,7 +368,7 @@ UnitySubsystemErrorCode LoadDisplay(IUnityInterfaces* xr_interfaces) {
 
   return CardboardDisplayProvider::GetInstance()
       ->GetDisplay()
-      ->RegisterLifecycleProvider("Cardboard", "CardboardDisplay",
+      ->RegisterLifecycleProvider(PLUGIN_NAME, DISPLAY_SUBSYSTEM_ID,
                                   &display_lifecycle_handler);
 }
 

@@ -252,7 +252,7 @@ UnitySubsystemErrorCode LoadInput(IUnityInterfaces* xr_interfaces) {
         CardboardInputProvider::GetInstance()->GetTrace(),
         "Lifecycle finished");
   };
-  return input->RegisterLifecycleProvider("Cardboard", "CardboardInput",
+  return input->RegisterLifecycleProvider(PLUGIN_NAME, INPUT_SUBSYSTEM_ID,
                                           &input_lifecycle_handler);
 }
 

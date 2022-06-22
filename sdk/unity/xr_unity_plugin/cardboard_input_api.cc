@@ -20,47 +20,9 @@
 
 #include "include/cardboard.h"
 
-// The following block makes log macros available for Android and iOS.
-#if defined(__ANDROID__)
-#include <android/log.h>
-#define LOG_TAG "CardboardInputApi"
-#define LOGW(fmt, ...)                                                       \
-  __android_log_print(ANDROID_LOG_WARN, LOG_TAG, "[%s : %d] " fmt, __FILE__, \
-                      __LINE__, ##__VA_ARGS__)
-#define LOGD(fmt, ...)                                                        \
-  __android_log_print(ANDROID_LOG_DEBUG, LOG_TAG, "[%s : %d] " fmt, __FILE__, \
-                      __LINE__, ##__VA_ARGS__)
-#define LOGE(fmt, ...)                                                        \
-  __android_log_print(ANDROID_LOG_ERROR, LOG_TAG, "[%s : %d] " fmt, __FILE__, \
-                      __LINE__, ##__VA_ARGS__)
-#define LOGF(fmt, ...)                                                        \
-  __android_log_print(ANDROID_LOG_FATAL, LOG_TAG, "[%s : %d] " fmt, __FILE__, \
-                      __LINE__, ##__VA_ARGS__)
-#elif defined(__APPLE__)
-#include <CoreFoundation/CFString.h>
-#include <CoreFoundation/CoreFoundation.h>
-extern "C" {
-void NSLog(CFStringRef format, ...);
-}
-#define LOGW(fmt, ...) \
-  NSLog(CFSTR("[%s : %d] " fmt), __FILE__, __LINE__, ##__VA_ARGS__)
-#define LOGD(fmt, ...) \
-  NSLog(CFSTR("[%s : %d] " fmt), __FILE__, __LINE__, ##__VA_ARGS__)
-#define LOGE(fmt, ...) \
-  NSLog(CFSTR("[%s : %d] " fmt), __FILE__, __LINE__, ##__VA_ARGS__)
-#define LOGF(fmt, ...) \
-  NSLog(CFSTR("[%s : %d] " fmt), __FILE__, __LINE__, ##__VA_ARGS__)
-#elif
-#define LOGW(...)
-#define LOGD(...)
-#define LOGE(...)
-#define LOGF(...)
-#endif
-
 namespace cardboard::unity {
 
-std::atomic<CardboardViewportOrientation>
-    CardboardInputApi::selected_viewport_orientation_(kLandscapeLeft);
+std::atomic<CardboardViewportOrientation> CardboardInputApi::selected_viewport_orientation_(kLandscapeLeft);
 
 std::atomic<bool> CardboardInputApi::head_tracker_recenter_requested_(false);
 
@@ -132,46 +94,3 @@ int64_t CardboardInputApi::GetBootTimeNano() {
 }
 
 }  // namespace cardboard::unity
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-void CardboardUnity_setViewportOrientation(
-    CardboardViewportOrientation viewport_orientation) {
-  switch (viewport_orientation) {
-    case CardboardViewportOrientation::kLandscapeLeft:
-      LOGD("Configured viewport orientation as landscape left.");
-      cardboard::unity::CardboardInputApi::SetViewportOrientation(
-          viewport_orientation);
-      break;
-    case CardboardViewportOrientation::kLandscapeRight:
-      LOGD("Configured viewport orientation as landscape right.");
-      cardboard::unity::CardboardInputApi::SetViewportOrientation(
-          viewport_orientation);
-      break;
-    case CardboardViewportOrientation::kPortrait:
-      LOGD("Configured viewport orientation as portrait.");
-      cardboard::unity::CardboardInputApi::SetViewportOrientation(
-          viewport_orientation);
-      break;
-    case CardboardViewportOrientation::kPortraitUpsideDown:
-      LOGD("Configured viewport orientation as portrait upside down.");
-      cardboard::unity::CardboardInputApi::SetViewportOrientation(
-          viewport_orientation);
-      break;
-    default:
-      LOGE(
-          "Misconfigured viewport orientation. Neither landscape left nor "
-          "lanscape right "
-          "nor portrait, nor portrait upside down was selected.");
-  }
-}
-
-void CardboardUnity_recenterHeadTracker() {
-  cardboard::unity::CardboardInputApi::SetHeadTrackerRecenterRequested();
-}
-
-#ifdef __cplusplus
-}
-#endif

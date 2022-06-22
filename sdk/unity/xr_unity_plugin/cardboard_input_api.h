@@ -21,6 +21,7 @@
 #include <memory>
 
 #include "include/cardboard.h"
+#include "cardboard_xr_plugin_log.h"
 
 namespace cardboard::unity {
 
@@ -91,22 +92,6 @@ class CardboardInputApi {
   // @brief Tracks head tracker recentering requests.
   static std::atomic<bool> head_tracker_recenter_requested_;
 };
-
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-/// @brief Sets the orientation of the device viewport to use.
-/// @param viewport_orientation The orientation of the viewport to use.
-void CardboardUnity_setViewportOrientation(
-    CardboardViewportOrientation viewport_orientation);
-
-/// @brief Flags a head tracker recentering request.
-void CardboardUnity_recenterHeadTracker();
-
-#ifdef __cplusplus
-}
-#endif
 
 }  // namespace cardboard::unity
 
