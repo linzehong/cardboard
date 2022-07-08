@@ -265,7 +265,7 @@ class CardboardDisplayApi {
 
   // @brief Holds the Unity XR interfaces.
   static IUnityInterfaces* xr_interfaces_;
-}
+};
 
 }  // namespace cardboard::unity
 

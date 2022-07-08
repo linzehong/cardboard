@@ -51,6 +51,7 @@ static void LoadXrSubsystems(IUnityInterfaces *unity_interfaces) {
 // @param event_type Graphic device event.
 static void UNITY_INTERFACE_API
 OnGraphicsDeviceEvent(UnityGfxDeviceEventType event_type) {
+    CARDBOARD_MAIN_XR_TRACE_LOG(global_unity_interfaces->Get<IUnityXRTrace>(), "OnGraphicsDeviceEvent");
   // Currently, we don't need to process any event other than initialization.
   if (event_type != kUnityGfxDeviceEventInitialize) {
     return;
@@ -82,6 +83,7 @@ extern "C" {
 // @param unity_interfaces Unity Interface pointer.
 void UNITY_INTERFACE_EXPORT UNITY_INTERFACE_API
 UnityPluginLoad(IUnityInterfaces *unity_interfaces) {
+    CARDBOARD_MAIN_XR_TRACE_LOG(unity_interfaces->Get<IUnityXRTrace>(), "UnityPluginLoad");
 #ifdef __ANDROID__
   unity_interfaces->Get<IUnityGraphics>()->RegisterDeviceEventCallback(
       OnGraphicsDeviceEvent);

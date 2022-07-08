@@ -28,6 +28,10 @@ find_library(log-lib log)
 # the following line if OpenGL ES 3.0 support is not needed.
 find_library(GLESv3-lib GLESv3)
 
+set(jni_libs_dir jniLibs/${ANDROID_ABI})
+
+link_directories(${jni_libs_dir})
+
 include_directories(.)
 
 # === Cardboard API ===
@@ -108,4 +112,5 @@ target_link_libraries(GfxPluginCardboard
     # libvulkan.so at runtime). Remove the following line if Vulkan rendering
     # is not needed
     dl
+        vision
 )

@@ -26,6 +26,7 @@
 #include "IUnityXRDisplay.h"
 #include "IUnityXRTrace.h"
 #include "UnitySubsystemTypes.h"
+#include "unity/vision.h"
 
 // @def Logs to Unity XR Trace interface @p message.
 #define CARDBOARD_DISPLAY_XR_TRACE_LOG(trace, message, ...)          \
@@ -131,7 +132,12 @@ class CardboardDisplayProvider {
   }
 
   UnitySubsystemErrorCode GfxThread_SubmitCurrentFrame() {
-    CARDBOARD_DISPLAY_XR_TRACE_LOG(trace_, "GfxThread_PopulateNextFrameDesc");
+    CARDBOARD_DISPLAY_XR_TRACE_LOG(trace_, "GfxThread_SubmitCurrentFrame");
+
+    PoseData poseData = VisionController_getControllerPose(CONTROLLER_DOF);
+    CARDBOARD_DISPLAY_XR_TRACE_LOG(trace_, "GfxThread_SubmitCurrentFrame %f,%f,%f,%f",
+                                   poseData.head_pose.rx, poseData.head_pose.ry, poseData.head_pose.rz, poseData.head_pose.rw);
+
     if (!is_initialized_) {
       CARDBOARD_DISPLAY_XR_TRACE_LOG(
           trace_, "Skip the rendering because Cardboard SDK is uninitialized.");
@@ -162,8 +168,6 @@ class CardboardDisplayProvider {
         display_->DestroyTexture(handle_, tex.second);
       }
       tex_map_.clear();
-
-      cardboard::unity::CardboardDisplayApi::GetScreenParams(&width_, &height_);
       cardboard::unity::CardboardDisplayApi::GetScreenParams(&width_, &height_);
       cardboard_display_api_->UpdateDeviceParams();
       is_initialized_ = true;
