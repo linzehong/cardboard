@@ -89,6 +89,10 @@ UnityPluginLoad(IUnityInterfaces *unity_interfaces) {
       OnGraphicsDeviceEvent);
   // Cache the Unity interfaces since it will be used by the callback function.
   global_unity_interfaces = unity_interfaces;
+
+  // Run OnGraphicsDeviceEvent(initialize) manually on plugin load
+  // to not miss the event in case the graphics device is already initialized
+  OnGraphicsDeviceEvent(kUnityGfxDeviceEventInitialize);
 #else
   LoadXrSubsystems(unity_interfaces);
 #endif
