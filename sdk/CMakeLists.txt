@@ -69,7 +69,7 @@ file(GLOB cardboard_xr_unity_srcs "unity/xr_unity_plugin/*.cc")
 file(GLOB cardboard_xr_provider_srcs "unity/xr_provider/*.cc")
 
 # Output binary
-add_library(GfxPluginCardboard SHARED
+add_library(gxrsdk_xr_provider SHARED
     # Cardboard API sources.
     ${cardboard_v1_srcs}
     ${general_srcs}
@@ -93,7 +93,7 @@ add_library(GfxPluginCardboard SHARED
     ${cardboard_xr_provider_srcs})
 
 # Includes
-target_include_directories(GfxPluginCardboard
+target_include_directories(gxrsdk_xr_provider
     PRIVATE ../third_party/unity_plugin_api)
 
 # #vulkan This is required for Vulkan rendering. Remove the following line if
@@ -101,7 +101,7 @@ target_include_directories(GfxPluginCardboard
 add_definitions(-DVK_USE_PLATFORM_ANDROID_KHR=1)
 
 # Build
-target_link_libraries(GfxPluginCardboard
+target_link_libraries(gxrsdk_xr_provider
     ${android-lib}
     ${GLESv2-lib}
     # #gles3 - Library is only needed if OpenGL ES 3.0 support is desired.

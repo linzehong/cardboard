@@ -172,6 +172,36 @@ class OpenGlEs3DistortionRenderer : public DistortionRenderer {
    *   - glGet(GL_ELEMENT_ARRAY_BUFFER_BINDING)
    */
   void SetMesh(const CardboardMesh* mesh, CardboardEye eye) override {
+
+    // region [testing] 只是测试使用，强制修改为填满左右半屏
+//    if (eye == kLeft) {
+//      mesh->vertices[0] = -1;
+//      mesh->vertices[1] = -1;
+//      mesh->vertices[2] = 0;
+//      mesh->vertices[3] = -1;
+//      mesh->vertices[4] = -1;
+//      mesh->vertices[5] = 1;
+//      mesh->vertices[6] = 0;
+//      mesh->vertices[7] = 1;
+//    }
+//    else {
+//        mesh->vertices[0] = 0;
+//        mesh->vertices[1] = -1;
+//        mesh->vertices[2] = 1;
+//        mesh->vertices[3] = -1;
+//        mesh->vertices[4] = 0;
+//        mesh->vertices[5] = 1;
+//        mesh->vertices[6] = 1;
+//        mesh->vertices[7] = 1;
+//    }
+    // endregion
+    CARDBOARD_LOGI("[testing] SetMesh eye:%d", eye);
+    CARDBOARD_LOGI("[testing] n_vertices:%d,vertices:[%f,%f][%f,%f][%f,%f][%f,%f],uvs:[%f,%f][%f,%f][%f,%f][%f,%f],n_indices:%d,indices:[%d,%d,%d,%d]",
+                   mesh->n_vertices,
+                   mesh->vertices[0], mesh->vertices[1], mesh->vertices[2], mesh->vertices[3], mesh->vertices[4], mesh->vertices[5], mesh->vertices[6], mesh->vertices[7],
+                   mesh->uvs[0], mesh->uvs[1], mesh->uvs[2], mesh->uvs[3], mesh->uvs[4], mesh->uvs[5], mesh->uvs[6], mesh->uvs[7],
+                   mesh->n_indices, mesh->indices[0], mesh->indices[1], mesh->indices[2], mesh->indices[3]);
+
     glBindBuffer(GL_ARRAY_BUFFER, vertices_vbo_[eye]);
     glBufferData(
         GL_ARRAY_BUFFER,
@@ -213,6 +243,8 @@ class OpenGlEs3DistortionRenderer : public DistortionRenderer {
           "not called yet.");
       return;
     }
+
+    CARDBOARD_LOGI("[testing] RenderEyeToDisplay (%d,%d,%d,%d)", x, y, width, height);
 
     glViewport(x, y, width, height);
     glBindFramebuffer(GL_FRAMEBUFFER, static_cast<GLuint>(target));
@@ -260,6 +292,8 @@ class OpenGlEs3DistortionRenderer : public DistortionRenderer {
   void RenderDistortionMesh(
       const CardboardEyeTextureDescription* eye_description,
       CardboardEye eye) const {
+    CARDBOARD_LOGI("[testing] RenderEyeToDisplay eye:%d,textureid:%d,(%f,%f,%f,%f)", eye, eye_description->texture, eye_description->left_u, eye_description->right_u, eye_description->top_v, eye_description->bottom_v);
+
     glBindBuffer(GL_ARRAY_BUFFER, vertices_vbo_[eye]);
     glVertexAttribPointer(
         attrib_pos_,

@@ -36,6 +36,9 @@ class DistortionMesh {
 
  private:
   static constexpr int kResolution = 40;
+    // region [testing] 只是测试使用，强制修改为填满左右半屏
+//  static constexpr int kResolution = 2;
+    // endregion
   std::vector<int> index_data_;
   std::vector<float> vertex_data_;
   std::vector<float> uvs_data_;

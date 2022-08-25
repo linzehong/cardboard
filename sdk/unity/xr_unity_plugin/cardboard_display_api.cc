@@ -83,6 +83,7 @@ void CardboardDisplayApi::UpdateDeviceParams() {
         "nor Metal was selected.");
     return;
   }
+  LOGD("[testing] UpdateDeviceParams");
 
   // Updates the screen size.
   screen_params_ = unity_screen_params_;
@@ -215,6 +216,8 @@ void CardboardDisplayApi::SetUnityScreenParams(int screen_width,
                                                int viewport_x, int viewport_y,
                                                int viewport_width,
                                                int viewport_height) {
+    LOGD("[testing] SetUnityScreenParams screen:(%d, %d),viewport:(%d,%d,%d,%d)",
+         screen_width, screen_height, viewport_x, viewport_y, viewport_width, viewport_height);
   unity_screen_params_ =
       ScreenParams{screen_width, screen_height,  viewport_x,
                    viewport_y,   viewport_width, viewport_height};
@@ -259,6 +262,7 @@ void CardboardDisplayApi::SetUnityInterfaces(IUnityInterfaces* xr_interfaces) {
 
 // @brief Configures rendering resources.
 void CardboardDisplayApi::RenderingResourcesSetup() {
+      LOGD("[testing] UpdateDeviceParams");
   if (selected_graphics_api_ == kNone) {
     LOGE(
         "Misconfigured Graphics API. Neither OpenGL ES 2.0 nor OpenGL ES 3.0 "

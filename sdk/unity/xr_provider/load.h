@@ -22,9 +22,9 @@
 /// 插件名称，在RegisterLifecycleProvider()时使用，注意必须与UnitySubsystemManifest.json中"name"字段一致
 #define PLUGIN_NAME "GXRSDK XR Plugin"
 /// 显示模块名称，在RegisterLifecycleProvider()时使用，注意必须与UnitySussystemManifest.json中"displays"."id"字段一致
-#define DISPLAY_SUBSYSTEM_ID "GXRDisplay"
+#define DISPLAY_SUBSYSTEM_ID "GxrDisplay"
 /// 输入模块名称，在RegisterLifecycleProvider()时使用，注意必须与UnitySussystemManifest.json中"inputs"."id"字段一致
-#define INPUT_SUBSYSTEM_ID "GXRInput"
+#define INPUT_SUBSYSTEM_ID "GxrInput"
 
 /// @brief Loads a UnityLifecycleProvider for the display provider.
 ///

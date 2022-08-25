@@ -161,6 +161,8 @@ class CardboardDisplayProvider {
       const UnityXRFrameSetupHints* frame_hints,
       UnityXRNextFrameDesc* next_frame) {
     CARDBOARD_DISPLAY_XR_TRACE_LOG(trace_, "GfxThread_PopulateNextFrameDesc");
+      UnityXRRectf renderViewport = frame_hints->appSetup.renderViewport;
+      CARDBOARD_DISPLAY_XR_TRACE_LOG(trace_, "[testing] renderViewport:(%f,%f,%f,%f)", renderViewport.x, renderViewport.y, renderViewport.width, renderViewport.height);
     // Allocate new color texture descriptors if needed and update device
     // parameters in Cardboard SDK.
     if ((frame_hints->changedFlags &
@@ -242,6 +244,12 @@ class CardboardDisplayProvider {
         // Field of view and viewport.
         eye_params->viewportRect = frame_hints->appSetup.renderViewport;
         ConfigureFieldOfView(fov, &eye_params->projection);
+          CARDBOARD_DISPLAY_XR_TRACE_LOG(trace_, "[testing] i:%d fov:(%f,%f,%f,%f)", i, fov[0], fov[1], fov[2], fov[3]);
+          CARDBOARD_DISPLAY_XR_TRACE_LOG(trace_, "[testing] i:%d halfAngles:(%f,%f,%f,%f)", i,
+                                         eye_params->projection.data.halfAngles.left,
+                                         eye_params->projection.data.halfAngles.right,
+                                         eye_params->projection.data.halfAngles.top,
+                                         eye_params->projection.data.halfAngles.bottom);
       }
 
       // Configure the culling passes for both eyes.
